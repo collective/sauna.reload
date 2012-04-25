@@ -9,8 +9,9 @@ sauna after calling it a day*
 Introduction
 ============
 
-``sauna.reload`` partially restarts Plone and reloads your changed source
-code every time you save a file.
+``sauna.reload`` is a developer tool which restarts Plone and reloads your changed source
+code every time you save a file. The restart is optimized for speed
+and happens much faster than a normal start up process.
 
 * Edit your code
 * Save
@@ -54,52 +55,37 @@ In order to take the advantage of ``sauna.reload``
 
 * You know how to run buildout
 
+* You are running Linux or OSX operating system
+
 No knowledge for warming up sauna is needed in order to use this product.
 
+Installing buildout configuration
+---------------------------------------------
 
-Using new buildout file for the development
--------------------------------------------
+The recommended installation configuration is to use ZEO server + 1 client for the development.
+This method is valid for **Plone 4.1 and higher**. You can use ``sauna.reload``
+without separate ZEO database server, using ``instance`` command, 
+but 
+`in this case you'll risk database corruption on restarts <http://collective-docs.readthedocs.org/en/latest/troubleshooting/exceptions.html>`_. 
 
-This is the recommended approach how to enable ``sauna.reload`` for your
-development environment.
+Below is the recommended approach how to enable ``sauna.reload`` for your
+development environment. However, since this product is only for development
+use the data loss should not be a big deal.
 
-Use git to fetch  ``sauna.reload`` source code to your buildout environment::
+Add ``sauna.reload`` to your ``buildout.cfg`` file:
 
-  cd src
-  git clone git://github.com/collective/sauna.reload.git
-
-Create a new buildout file ``development.cfg`` which extends your existing
-``buildout.cfg`` – this way you can easily keep development stuff separate
-from your main buildout.cfg which you can also use on the production server.
-
-``development.cfg``::
+``buildout.cfg``::
 
   [buildout]
-
-  extends = buildout.cfg
-
-  develop +=
-      src/sauna.reload
-
-  [instance]
-
-  # XXX: May conflict with existing zope-conf-additional directives
-  zope-conf-additional = %import sauna.reload
-
-  eggs +=
+  eggs += 
       sauna.reload
 
-.. note:: With this approach you do not need to modify the existing
-   buildout.cfg.
+  # This section is either client1 / instance depending
+  # on your buildout
+  [instance]
+  zope-conf-additional = %import sauna.reload
 
-Then build it out with this special config file::
-
-  bin/buildout -c development.cfg
-
-*I like to buildout buildout. I like to buildout buildout...*
-
-
-OSX special notes
+OSX notes
 +++++++++++++++++
 
 If you are using vim (or macvim) on OSX, you must disable vim's writebackups
@@ -117,8 +103,8 @@ Similar issues have been reported with some other OSX-editors.
 Tips and fixes for these are welcome.
 
 
-Ubuntu/Debian/Linux special notes
-+++++++++++++++++++++++++++++++++++
+Ubuntu / Debian / Linux notes
++++++++++++++++++++++++++++++++++++++++
 
 You might need to raise your open files *ulimit* if you are operating on the
 large set of files, both hard and soft limit.
@@ -131,34 +117,23 @@ If your *ulimit* is too low you'll get very misleading *OSError: No space left
 on device*.
 
 
-Updating the existing buildout.cfg
-----------------------------------
-
-Alternatively you can just hack your existing buildout.cfg to have
-``sauna.reload``.
-
-Add this package to your buildout eggs and add following
-``zope-conf-additional`` line  to you instance part of buildout.cfg::
-
-  [instance]
-  recipe = plone.recipe.zope2instance
-  ...
-  zope-conf-additional = %import sauna.reload
-
-
 Usage: start Plone in reload enabled manner
 ===========================================
 
 To start Plone with reload functionality you need
 to give special environment variable ``RELOAD_PATH``
-for your instance command::
+for your client1 command::
 
-  RELOAD_PATH=src bin/instance fg
+  # Start database server
+  bin/zeoserver start
+
+  # Start Plone with reload enabled
+  RELOAD_PATH=src bin/client1 fg
 
 Or if you want to optimize load speed you can directly specify only some of
 your development products::
 
-  RELOAD_PATH=src/my.product:src/my.another.product bin/instance fg
+  RELOAD_PATH=src/my.product:src/my.another.product bin/client1 fg
 
 .. warning:: If other products depend on your product, e.g CMFPlone
    dependencies, sauna.reload does not kick in early enough and the reload does
