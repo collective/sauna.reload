@@ -247,13 +247,36 @@ class ForkLoop(object):
 
         self.database.prepareForReload()
 
+    def _resolveExitReason(self, exit_status):
+        """
+        Resolve the reason for (abnormal) child termination
+
+        :param exit_status: Whatever os.wait() pukes on you
+        """
+
+        flags = ""
+
+        if os.WCOREDUMP(exit_status):
+            flags += "core dumped, "
+
+        if os.WIFSIGNALED(exit_status):
+            code = os.WTERMSIG(exit_status)
+            flags += "terminated by signal %d," % code
+
+        if os.WIFEXITED(exit_status):
+            code = os.WEXITSTATUS(exit_status)
+            flags += "exited with code %d, " % code
+
+        return flags
+
     def _waitChildToDieAndScheduleNew(self, signal=None, frame=None):
         """
         STEP 3 (parent): Child told us via SIGCHLD that we can spawn new child
         """
         try:
             # Acknowledge dead child
-            os.wait()
+            pid, exit_status = os.wait()
+            logger.info("Child %d exited, reasons %s" % (pid, self._resolveExitReason(exit_status)))
         except OSError:
             # OSError: [Errno 10] No child processes
             pass
