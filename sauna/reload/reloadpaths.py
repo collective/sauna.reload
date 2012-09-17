@@ -75,6 +75,18 @@ class ReloadPaths(object):
 
         return parents
 
+    def hasAbsPath(self, test_path):
+        """
+        Check if we have absolute folder path of an egg on the reload list.
+        """
+        test_path = os.path.abspath(test_path)
+        for path in self.paths:
+            ap = os.path.abspath(path)
+            if test_path.startswith(ap):
+                return True
+
+        return False
+
 
 if __name__ == '__main__':
     paths = [

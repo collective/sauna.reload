@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.4.3 - current
+------------------
+
+- Fixed reloadings of Products-namespace eggs on Plone 4.1 and Zope 2.13 [miohtama]
 
 0.4.3 – 2012-04-25
 ------------------

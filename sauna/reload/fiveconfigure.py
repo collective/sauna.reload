@@ -18,6 +18,68 @@
 from Zope2.App.zcml import load_config
 
 
+def is_sauna_product(product_dir):
+    """
+    Check if a product dir is reloadable.
+
+    :param product_dir: Absolute path to an egg
+    """
+    from sauna.reload import reload_paths
+
+    if reload_paths.hasAbsPath(product_dir):
+        return True
+
+    return False
+
+
+# Monkey-patched to delay sauna.reloadable Products.xxx eggs loads
+# by Zope 2.13.
+def install_products(app):
+    # Install a list of products into the basic folder class, so
+    # that all folders know about top-level objects, aka products
+    #
+    from OFS.Application import get_folder_permissions
+    from OFS.Application import install_product
+    from OFS.Application import install_package
+    from OFS.Application import get_packages_to_initialize
+    from OFS.Application import get_products
+
+    from App.config import getConfiguration
+    import transaction
+
+    folder_permissions = get_folder_permissions()
+    meta_types = []
+    done = {}
+
+    debug_mode = getConfiguration().debug_mode
+
+    transaction.get().note('Prior to product installs')
+    transaction.commit()
+
+    products = get_products()
+
+    for priority, product_name, index, product_dir in products:
+        # For each product, we will import it and try to call the
+        # intialize() method in the product __init__ module. If
+        # the method doesnt exist, we put the old-style information
+        # together and do a default initialization.
+
+        if product_name in done:
+            continue
+
+        if is_sauna_product(product_dir):
+            # Will be later loaded by installDeferred()
+            continue
+
+        done[product_name] = 1
+        install_product(app, product_dir, product_name, meta_types,
+                        folder_permissions, raise_exc=debug_mode)
+
+    # Delayed install of packages-as-products
+    for module, init_func in tuple(get_packages_to_initialize()):
+        install_package(app, module, init_func, raise_exc=debug_mode)
+
+
 def findProducts():
     """
     Do not find products under sauna.reload's reload paths.
@@ -59,7 +121,10 @@ def deferInstalls():
     """
     try:
         import OFS.metaconfigure
+        import OFS.Application
         setattr(OFS.metaconfigure, 'findProducts', findProducts)
+        setattr(OFS.Application, 'install_products', install_products)
+
     except ImportError:
         import Products.Five.fiveconfigure
         setattr(Products.Five.fiveconfigure, 'findProducts', findProducts)
