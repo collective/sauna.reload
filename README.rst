@@ -283,6 +283,10 @@ loading kicks in too early and ``sauna.reload`` cannot affect it.
 The result is that all code imported through ``overrides.zcml`` 
 becomes non-reloadable.
 
+A workaround is to arrange your code layout so that you keep
+overrider Python in separate modules and do not make imports
+from your main code base there.
+
 Does not handle dependencies
 -----------------------------
 
