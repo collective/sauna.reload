@@ -273,14 +273,35 @@ Limitations
 ``sauna.reload`` supports only Plone >= 4.0 for FileStorage and Plone >= 4.1
 for ZEO ClientStorage.
 
+Does not work with overrides.zcml
+-----------------------------------
+
+If your package uses ``overrides.zcml`` configuration mechanism 
+``sauna.reload`` cannot handle it. This is because ``overrides.zcml``
+loading kicks in too early and ``sauna.reload`` cannot affect it.
+
+The result is that all code imported through ``overrides.zcml`` 
+becomes non-reloadable.
+
+Does not handle dependencies
+-----------------------------
+
 ``sauna.reload`` has a major pitfall. Because it depends on deferring loading
 of packages to be watched and reloaded, also every package depending on those
 packages should be defined to be reloaded (in ``RELOAD_PATH``). And
 ``sauna.reload`` doesn't resolve those dependencies automatically!
 
+Forces loading all dependencies
+--------------------------------
+
 An another potential troublemaker is that ``sauna.reload`` performs implicit
 ``<includeDependencies package="." />`` for every package in ``RELOAD_PATH``
 (to preload dependencies for those packages to speed up the reload).
+
+This may break up some packages.
+
+Does not work with core packages
+-----------------------------
 
 We are sorry that ``sauna.reload`` may not work for everyone. For example,
 reloading of core Plone packages could be tricky, if not impossible, because
@@ -288,13 +309,15 @@ many of them are explicitly included by ``configure.zcml`` of CMFPlone and are
 not using ``z3c.autoinclude`` at all. You would have to remove the dependency
 from CMFPlone for development to make it work...
 
+Product installation order is altered
+---------------------------------------
+
 Also because the product installation order is altered (by all the above) you
 may find some issue if your product does something funky on installation or at
 import time.
 
-Please report any other issues at:
-https://github.com/collective/sauna.reload/issues.
-
+Please report any other issues at
+`Github issue tracker <https://github.com/collective/sauna.reload/issues>`_.
 
 Troubleshooting
 ===============
