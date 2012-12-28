@@ -276,7 +276,8 @@ class ForkLoop(object):
         try:
             # Acknowledge dead child
             pid, exit_status = os.wait()
-            logger.info("Child %d exited, reasons %s" % (pid, self._resolveExitReason(exit_status)))
+            logger.info("Child %d exited, reasons: %s" % (
+                pid, self._resolveExitReason(exit_status)))
         except OSError:
             # OSError: [Errno 10] No child processes
             pass
