@@ -254,20 +254,20 @@ class ForkLoop(object):
         :param exit_status: Whatever os.wait() pukes on you
         """
 
-        flags = ""
+        flags = []
 
         if os.WCOREDUMP(exit_status):
-            flags += "core dumped, "
+            flags.append("core dumped")
 
         if os.WIFSIGNALED(exit_status):
             code = os.WTERMSIG(exit_status)
-            flags += "terminated by signal %d," % code
+            flags.append("terminated by signal %d" % code)
 
         if os.WIFEXITED(exit_status):
             code = os.WEXITSTATUS(exit_status)
-            flags += "exited with code %d, " % code
+            flags.append("exited with code %d" % code)
 
-        return flags
+        return ", ".join(flags)
 
     def _waitChildToDieAndScheduleNew(self, signal=None, frame=None):
         """
