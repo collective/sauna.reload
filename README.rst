@@ -60,13 +60,13 @@ In order to take the advantage of ``sauna.reload``
 No knowledge for warming up sauna is needed in order to use this product.
 
 Installing buildout configuration
----------------------------------------------
+---------------------------------
 
 The recommended installation configuration is to use ZEO server + 1 client for the development.
 This method is valid for **Plone 4.1 and higher**. You can use ``sauna.reload``
-without separate ZEO database server, using ``instance`` command, 
-but 
-`in this case you'll risk database corruption on restarts <http://collective-docs.readthedocs.org/en/latest/troubleshooting/exceptions.html>`_. 
+without separate ZEO database server, using ``instance`` command,
+but
+`in this case you'll risk database corruption on restarts <http://collective-docs.readthedocs.org/en/latest/troubleshooting/exceptions.html>`_.
 
 Below is the recommended approach how to enable ``sauna.reload`` for your
 development environment. However, since this product is only for development
@@ -77,7 +77,7 @@ Add ``sauna.reload`` to your ``buildout.cfg`` file:
 ``buildout.cfg``::
 
   [buildout]
-  eggs += 
+  eggs +=
       sauna.reload
 
   # This section is either client1 / instance depending
@@ -86,7 +86,7 @@ Add ``sauna.reload`` to your ``buildout.cfg`` file:
   zope-conf-additional = %import sauna.reload
 
 OSX notes
-+++++++++++++++++
++++++++++
 
 If you are using vim (or macvim) on OSX, you must disable vim's writebackups
 to allow WatchDog to see your modifications
@@ -104,7 +104,7 @@ Tips and fixes for these are welcome.
 
 
 Ubuntu / Debian / Linux notes
-+++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++
 
 You might need to raise your open files *ulimit* if you are operating on the
 large set of files, both hard and soft limit.
@@ -273,22 +273,26 @@ Limitations
 ``sauna.reload`` supports only Plone >= 4.0 for FileStorage and Plone >= 4.1
 for ZEO ClientStorage.
 
-Does not work with overrides.zcml
------------------------------------
-
-If your package uses ``overrides.zcml`` configuration mechanism 
-``sauna.reload`` cannot handle it. This is because ``overrides.zcml``
-loading kicks in too early and ``sauna.reload`` cannot affect it.
-
-The result is that all code imported through ``overrides.zcml`` 
-becomes non-reloadable.
-
-A workaround is to arrange your code layout so that you keep
-overrider Python in separate modules and do not make imports
-from your main code base there.
+.. Does not work with overrides.zcml
+.. -----------------------------------
+..
+.. If your package uses ``overrides.zcml`` configuration mechanism
+.. ``sauna.reload`` cannot handle it. This is because ``overrides.zcml``
+.. loading kicks in too early and ``sauna.reload`` cannot affect it.
+..
+.. The result is that all code imported through ``overrides.zcml``
+.. becomes non-reloadable.
+..
+.. A workaround is to arrange your code layout so that you keep
+.. overrider Python in separate modules and do not make imports
+.. from your main code base there.
+..
+.. XXX: This is not true. Sauna.reload explicitly loads overrides.zcml
+.. using includePlugins-directive of z3c.autoinclude. There must be an another
+.. reason behind this behavior.
 
 Does not handle dependencies
------------------------------
+----------------------------
 
 ``sauna.reload`` has a major pitfall. Because it depends on deferring loading
 of packages to be watched and reloaded, also every package depending on those
@@ -296,7 +300,7 @@ packages should be defined to be reloaded (in ``RELOAD_PATH``). And
 ``sauna.reload`` doesn't resolve those dependencies automatically!
 
 Forces loading all dependencies
---------------------------------
+-------------------------------
 
 An another potential troublemaker is that ``sauna.reload`` performs implicit
 ``<includeDependencies package="." />`` for every package in ``RELOAD_PATH``
@@ -305,7 +309,7 @@ An another potential troublemaker is that ``sauna.reload`` performs implicit
 This may break up some packages.
 
 Does not work with core packages
------------------------------
+--------------------------------
 
 We are sorry that ``sauna.reload`` may not work for everyone. For example,
 reloading of core Plone packages could be tricky, if not impossible, because
@@ -314,7 +318,7 @@ not using ``z3c.autoinclude`` at all. You would have to remove the dependency
 from CMFPlone for development to make it work...
 
 Product installation order is altered
----------------------------------------
+-------------------------------------
 
 Also because the product installation order is altered (by all the above) you
 may find some issue if your product does something funky on installation or at
@@ -322,6 +326,7 @@ import time.
 
 Please report any other issues at
 `Github issue tracker <https://github.com/collective/sauna.reload/issues>`_.
+
 
 Troubleshooting
 ===============
@@ -409,7 +414,7 @@ sauna.reload is not active - nothing printed on console
 -------------------------------------------------------
 
 Check that your buildout.cfg includes
-``zope-conf-additionalzope-conf-additional`` line.
+``zope-conf-additional`` line.
 
 If using separate ``development.cfg`` make sure you run your buildout using
 it::
