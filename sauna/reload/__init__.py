@@ -49,4 +49,8 @@ __loader__ = MonkeyPatchingLoader(sys.modules[__name__])
 
 # Prepopulate platform.uname, before it gets lost in the stack
 import platform
-uname = platform.uname()
+try:
+    uname = platform.uname()
+except IOError:
+    # platform.uname() may throw IOError when called from a forked process
+    uname = ""
