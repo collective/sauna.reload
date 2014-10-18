@@ -4,8 +4,9 @@ Changelog
 0.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Log 'cannot reload' as warning instead of error to avoid triggering
+  postmortem debugging
+  [sune]
 
 0.5.1 (2013-02-20)
 ------------------
