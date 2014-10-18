@@ -140,7 +140,7 @@ def checkDeferringErrors():
     cwd = os.getcwd() + os.path.sep
     for zcml in getattr(configuration_context, '_seen_files', ()):
         if zcml in reload_paths:
-            logger.deferredError("Cannot reload %s." % zcml.replace(cwd, ''))
+            logger.deferredWarning("Cannot reload %s." % zcml.replace(cwd, ''))
             FAILED_TO_DEFER.append(zcml)
 
 
