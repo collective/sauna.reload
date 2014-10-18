@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.5.2 (unreleased)
+0.5.2 (2014-10-18)
 ------------------
 
 - Log 'cannot reload' as warning instead of error to avoid triggering
