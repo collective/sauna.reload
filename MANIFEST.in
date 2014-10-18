@@ -1,0 +1,3 @@
+recursive-include sauna *
+include *.py *.txt *.rst
+global-exclude *.pyc
