@@ -115,11 +115,13 @@ class ZEOClientStorageDatabaseHooksAdapter(object):
         self.context._cache.close()
 
     def prepareForReload(self):
-        # Close the connection (before the child is killed)
         _rpc_mgr = self.context._rpc_mgr
-        _rpc_mgr.close()
-        # Close the cache (before the child is killed)
-        self.context._cache.close()
+        if self.context.is_connected():
+            # Close the connection (before the child is killed)
+            _rpc_mgr.close()
+
+            # Close the cache (before the child is killed)
+            self.context._cache.close()
 
     def resumeFromReload(self):
         # Open a new cache for the new child
