@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="sauna.reload",
-    version='0.5.3.dev0',
+    version='0.5.3',
     description="Instant code reloading for Plone using a fork loop",
     long_description=(open("README.rst").read() + "\n" +
                       open("CHANGES.txt").read()),
