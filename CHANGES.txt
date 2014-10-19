@@ -4,8 +4,9 @@ Changelog
 0.5.3 (unreleased)
 ------------------
 
-- Check if the storage connection has already been closed before trying to
-  close it. Zope versions >= 2.13.19 explicitly close the connection on shutdown.
+- Fix issue where in Zope version >= 2.13.19 the storage is explicitly closed
+  on shutdown. This caused an attribute error on reload, since the _rpc_mgr was
+  None. Test for is_connected before closing connection and cache.
   [sunew]
 
 0.5.2 (2014-10-18)
