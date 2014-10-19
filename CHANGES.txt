@@ -4,15 +4,16 @@ Changelog
 0.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Check if the storage connection has already been closed before trying to
+  close it. Zope versions >= 2.13.19 explicitly close the connection on shutdown.
+  [sunew]
 
 0.5.2 (2014-10-18)
 ------------------
 
 - Log 'cannot reload' as warning instead of error to avoid triggering
   postmortem debugging
-  [sune]
+  [sunew]
 
 0.5.1 (2013-02-20)
 ------------------
