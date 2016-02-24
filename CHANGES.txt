@@ -4,8 +4,8 @@ Changelog
 0.5.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Add workaround for watchdog raising annoying KeyErrors
+  [datakurre]
 
 0.5.3 (2014-10-19)
 ------------------
