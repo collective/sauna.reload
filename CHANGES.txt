@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.5.4 (unreleased)
+0.5.4 (2016-02-24)
 ------------------
 
 - Add workaround for watchdog raising annoying KeyErrors
