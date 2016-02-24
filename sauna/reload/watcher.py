@@ -51,7 +51,10 @@ class Watcher(FileSystemEventHandler):
             observer = Observer()
             self.observers.append(observer)
             observer.schedule(self, path=path, recursive=True)
-            observer.start()
+            try:
+                observer.start()
+            except KeyError:
+                pass
 
     def _exitHandler(self):
         for obs in self.observers:
