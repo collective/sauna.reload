@@ -76,10 +76,16 @@ def getDependencyInfosForDeferred():
                 # Resolve ZCMLs to be loaded for the other requirements
                 dist_manager = DistributionManager(get_provider(req))
                 for dotted_name in dist_manager.dottedNames():
-                    module = resolve(dotted_name)
+                    try:
+                        module = resolve(dotted_name)
+                    except ImportError:
+                        continue
                     for candidate in zcml_to_look_for:
-                        candidate_path = os.path.join(
-                            os.path.dirname(module.__file__), candidate)
+                        try:
+                            candidate_path = os.path.join(
+                                os.path.dirname(module.__file__), candidate)
+                        except AttributeError:
+                            continue
                         if os.path.isfile(candidate_path):
                             info[candidate].append(dotted_name)
             for key in deps:
