@@ -16,6 +16,8 @@
 
 """ReloadPaths-utility to ease reload path related operations"""
 
+from __future__ import print_function
+
 import os
 
 
@@ -97,4 +99,4 @@ if __name__ == '__main__':
         '/another/one',
     ]
     rp = ReloadPaths(paths)
-    print list(rp.getParentPaths())
+    print(list(rp.getParentPaths()))

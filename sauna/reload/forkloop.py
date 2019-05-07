@@ -90,7 +90,7 @@ class ForkLoop(object):
         self.cfg = getConfiguration()
 
         # Must import here because we don't have DB on bootup yet
-        from Globals import DB
+        from Zope2 import DB
         self.database = IDatabaseHooks(DB)
 
         # SIGCHLD tells us that child process has really died and we can spawn

@@ -51,5 +51,5 @@ class MonkeyPatchingLoader(ImpLoader):
                 # 2) Prevent Five from finding packages under reload paths.
                 fiveconfigure.deferInstalls()
             # 3) Return dummy config to keep Zope happy.
-            return '<component></component>'
+            return b'<component></component>'
         return super(MonkeyPatchingLoader, self).get_data(self, pathname)

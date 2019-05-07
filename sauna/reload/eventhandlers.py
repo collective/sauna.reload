@@ -15,7 +15,6 @@
 
 import time
 
-from ZServer.HTTPServer import zhttp_server
 from App.config import getConfiguration
 
 from sauna.reload import\
@@ -57,13 +56,15 @@ def startForkLoop(event):
     autoinclude.checkDeferringErrors()
 
     config = getConfiguration()
-    zserver = [server for server in config.servers
-        if isinstance(server, zhttp_server)][0]
+    port = 8080
+    for server in config.servers:
+        port = getattr(server, 'port', None) or 8080
+        break
 
     logger.info("We saved at least %s seconds from boot up time" %
         (time.time() - forkloop.boot_started))
 
     logger.info("Overview available at http://127.0.0.1:%i/@@saunareload" %
-        (zserver.port))
+                (port))
 
     forkloop.start()

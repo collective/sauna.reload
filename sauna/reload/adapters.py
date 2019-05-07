@@ -17,8 +17,8 @@
 
 from persistent.TimeStamp import TimeStamp
 
-from zope.interface import implements
-from zope.component import adapts
+from zope.interface import implementer
+from zope.component import adapter
 
 from ZODB.interfaces import IDatabase
 from ZODB.FileStorage.FileStorage import FileStorage, read_index
@@ -27,12 +27,12 @@ from ZEO.ClientStorage import ClientStorage
 from sauna.reload.interfaces import IDatabaseHooks
 
 
+@implementer(IDatabaseHooks)
+@adapter(IDatabase)
 class ZODBDatabaseHooksAdapter(object):
     """
     Selective ZODB-adapter (e.g. supporting both FileStorage and ZEO)
     """
-    implements(IDatabaseHooks)
-    adapts(IDatabase)
 
     def __init__(self, context):
         self.context = IDatabaseHooks(context.storage)
@@ -44,12 +44,12 @@ class ZODBDatabaseHooksAdapter(object):
         return self.context.resumeFromReload()
 
 
+@implementer(IDatabaseHooks)
+@adapter(FileStorage)
 class ZODBFileStorageDatabaseHooksAdapter(object):
     """
     FileStorage-adapter
     """
-    implements(IDatabaseHooks)
-    adapts(FileStorage)
 
     def __init__(self, context):
         # Try to get the *real* FileStorage,
@@ -93,12 +93,12 @@ class ZODBFileStorageDatabaseHooksAdapter(object):
             self.context._lock_release()
 
 
+@implementer(IDatabaseHooks)
+@adapter(ClientStorage)
 class ZEOClientStorageDatabaseHooksAdapter(object):
     """
     ZEO-client adapter
     """
-    implements(IDatabaseHooks)
-    adapts(ClientStorage)
 
     def __init__(self, context):
         self.context = context

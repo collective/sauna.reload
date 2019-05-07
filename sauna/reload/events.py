@@ -15,20 +15,20 @@
 
 """Default Event Implementations"""
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from sauna.reload.interfaces import INewChildForked, INewChildIsReady
 
 
+@implementer(INewChildForked)
 class NewChildForked(object):
-    implements(INewChildForked)
 
     def __init__(self, forkloop):
         self.forkloop = forkloop
 
 
+@implementer(INewChildIsReady)
 class NewChildIsReady(object):
-    implements(INewChildIsReady)
 
     def __init__(self, forkloop):
         self.forkloop = forkloop
