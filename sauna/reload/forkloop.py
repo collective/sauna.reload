@@ -229,7 +229,15 @@ class ForkLoop(object):
             # Kill itself
             os.kill(os.getpid(), signal.SIGINT)
         else:
-            os.kill(self.child_pid, signal.SIGINT)
+            # XXX: Should be signal.SIGINT, but getting Python 3 with
+            # Twisted to shut down cleanly with SIGINT seems hard.
+            #
+            # SIGINT with signal handler to twisted.internet.reactor.crash
+            # works sometimes, but more often not
+            #
+            # Using SIGKILL will skip database teardown and did cause data
+            # loss on ZODB 3, not sure yet on ZODB 4
+            os.kill(self.child_pid, signal.SIGKILL)
 
     def _parentExitHandler(self, signum=None, frame=None):
         if self.isChild():
