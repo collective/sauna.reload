@@ -13,7 +13,6 @@
 # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE.
-
 """ReloadPaths-utility to ease reload path related operations"""
 
 from __future__ import print_function
@@ -22,9 +21,11 @@ import os
 
 
 class ReloadPaths(object):
-
     def __init__(self, paths):
         self.paths = [p.rstrip(os.sep) for p in paths]
+
+    def __bool__(self):
+        return len(self.paths) > 0
 
     def __nonzero__(self):
         return len(self.paths) > 0
@@ -38,7 +39,7 @@ class ReloadPaths(object):
         return False
 
     def __iter__(self):
-        return list(self.paths)
+        return iter(self.paths)
 
     def findEggPaths(self):
 
