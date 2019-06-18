@@ -51,7 +51,13 @@ def getDependencyInfosForDeferred():
     Return dictionary with lists of configuration files
     for the dependencies of the deferred eggs.
     """
-    deferred = ['zc.table', 'hurry.workflow']
+    deferred = [
+        'zc.table',
+        'hurry.workflow',
+        'zope.intid',
+        'zope.site',
+        'zope.sendmail',
+    ]
     # XXX: Assuming that all dependencies should be autoincluded
     # will probably get us into trouble, but let's see how big trouble.
     # *zc.table* is an example of a dependency, whose *configure.zcml*
